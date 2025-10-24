@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Nuam (Dark Mode)</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <img src="{% static 'img/nuam_HD.png' %}" alt="Logo Nuam" class="corner-logo">
+
+  <div class="login-box">
+    <h2>Iniciar Sesión</h2>
+
+    <form method="post">
+      {% csrf_token %}
+      <label for="correo">Correo Electrónico</label>
+      <input type="email" id="correo" name="correo" placeholder="Ingresa tu correo" required>
+
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+
+      <label for="cargo">Seleccionar Cargo</label>
+      <select id="cargo" name="cargo" required>
+        <option value="">Selecciona un cargo</option>
+        <option value="administrador">Administrador</option>
+        <option value="auditor">Auditor</option>
+        <option value="corredor">Corredor</option>
+      </select>
+
+      <button type="submit">Iniciar Sesión</button>
+    </form>
+  </div>
+
+  <footer>© 2025 Nuam - Todos los derechos reservados</footer>
+
+</body>
+</html>
