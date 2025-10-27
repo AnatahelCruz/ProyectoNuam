@@ -81,8 +81,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'freedb_entornoprueba', 
-        'USER': 'freedb_nuamuser2',            
-        'PASSWORD': 'M5Z6W?UQh5w*mNV',     
+        'USER': 'freedb_nuamuser3',            
+        'PASSWORD': 'Nfrc*8J*A3j?Tbk',     
         'HOST': 'sql.freedb.tech',      
         'PORT': '3306',
     }
