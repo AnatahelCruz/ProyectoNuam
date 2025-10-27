@@ -79,9 +79,11 @@ pymysql.install_as_MySQLdb()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'entornoprueba',
-        'USER': 'root',
-        'PASS': ''
+        'NAME': 'freedb_entornoprueba', 
+        'USER': 'freedb_nuamuser',            
+        'PASSWORD': 'sKE52src?bp!2Uh',     
+        'HOST': 'sql.freedb.tech',      
+        'PORT': '3306',
     }
 }
 
