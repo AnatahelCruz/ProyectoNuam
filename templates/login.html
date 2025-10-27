@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Nuam (Dark Mode)</title>
+
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-  <img src="{% static 'img/nuam_HD.png' %}" alt="Logo Nuam" class="corner-logo">
+  <img src="{% static 'img/nuam_HD.png' %}" alt="Nuam Logo" class="corner-logo">
 
   <div class="login-box">
     <h2>Iniciar Sesión</h2>
@@ -26,10 +27,14 @@
         <option value="">Selecciona un cargo</option>
         <option value="administrador">Administrador</option>
         <option value="auditor">Auditor</option>
-        <option value="corredor">Corredor</option>
+        <option value="corredor">Corredor Tributario</option>
       </select>
 
       <button type="submit">Iniciar Sesión</button>
+
+      {% if error %}
+      <p class="error-msg">{{ error }}</p>
+      {% endif %}
     </form>
   </div>
 
