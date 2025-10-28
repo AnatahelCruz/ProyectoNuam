@@ -1,11 +1,88 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Panel de Administración - Nuam</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
 </head>
 <body>
-    
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="{% static 'img/nuam_HD.png' %}" alt="Nuam Logo" class="logo me-2">
+            </a>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Roles</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Cargar Archivo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Notificaciones</a></li>
+                </ul>
+
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-light me-2"><i class="bi bi-gear"></i></button>
+                    <div class="input-group me-3" style="width:200px;">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control border-start-0" placeholder="Buscar">
+                    </div>
+                    <div class="profile-placeholder bg-nuam text-white rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-person"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        <div class="row g-4">
+
+            <div class="col-md-6">
+                <div class="card border-nuam shadow-sm">
+                    <div class="card-header fw-bold">Notificaciones</div>
+                    <div class="card-body">
+                        <div class="alert alert-primary py-2 mb-2">Calificaciones_1 — El archivo se subió correctamente.</div>
+                        <div class="alert alert-danger py-2 mb-2">Calificaciones_2 — No se pudo subir este archivo.</div>
+                        <button class="btn btn-nuam mt-2">Ver Notificaciones</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-nuam shadow-sm">
+                    <div class="card-header fw-bold">Carga de Archivos</div>
+                    <div class="card-body">
+                        <div class="alert alert-success py-2 mb-2">Calificaciones_3 — Se está procesando la subida.</div>
+                        <div class="alert alert-success py-2 mb-2">Calificaciones_4 — Se está procesando la subida.</div>
+                        <button class="btn btn-nuam mt-2">Cargar Archivos</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-nuam shadow-sm">
+                    <div class="card-header fw-bold">Roles del Sistema</div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Corredor Tributario <i class="bi bi-pencil"></i>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Auditor <i class="bi bi-lock"></i>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Administrador <i class="bi bi-person-badge"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

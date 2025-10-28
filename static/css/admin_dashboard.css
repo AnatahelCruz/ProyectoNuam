@@ -1,0 +1,51 @@
+
+body {
+    background-color: #f8f9fa;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.logo {
+    width: 110px;
+    height: auto;
+}
+
+.text-nuam {
+    color: #ff5722;
+}
+
+.bg-nuam {
+    background-color: #ff5722;
+}
+
+.border-nuam {
+    border: 1.5px solid #ff5722;
+}
+
+.btn-nuam {
+    background-color: #ff5722;
+    color: #fff;
+    font-weight: 500;
+}
+
+.btn-nuam:hover {
+    background-color: #ff784e;
+}
+
+.nav-link {
+    color: #333;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.nav-link.active, .nav-link:hover {
+    background-color: #ff5722;
+    color: #fff !important;
+    border-radius: 6px;
+    padding: 6px 12px;
+}
+
+.profile-placeholder {
+    width: 40px;
+    height: 40px;
+    background-color: #ff5722;
+}
