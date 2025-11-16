@@ -16,7 +16,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR,'templates')
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -26,7 +25,7 @@ SECRET_KEY = 'django-insecure-k5ebkdc4#q+8-@yb9eumos=kxz%2d1#9(__tvy1sl9t%z*#(5%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['proyectonuam.onrender.com']
+ALLOWED_HOSTS = []#proyectonuam.onrender.com
 
 
 # Application definition
