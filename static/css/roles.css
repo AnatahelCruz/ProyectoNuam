@@ -1,0 +1,44 @@
+
+.roles-contenedor {
+    max-width: 900px;
+}
+
+
+.roles-titulo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #003366;
+}
+
+
+.btn-nuam {
+    background-color: #003366;
+    color: white;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.btn-nuam:hover {
+    background-color: #005299;
+    color: white;
+}
+
+
+.table thead tr {
+    background-color: #003366;
+    color: white;
+}
+
+
+.profile-placeholder {
+    width: 40px;
+    height: 40px;
+    background-color: #003366;
+}
+
+
+#searchInput {
+    border-radius: 6px;
+}
+
+

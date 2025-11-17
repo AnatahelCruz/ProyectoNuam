@@ -16,10 +16,25 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Sistema.views import login_view, admin_dashboard
+from Sistema.views import (
+    login_view, admin_dashboard, auditor_dashboard, corredor_dashboard,
+    listaCalificaciones, crearCalificacion, modCalificacion, eliminarCalificacion, listarRoles,
+    crearRol, editarRol, eliminarRol
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', login_view, name='login'),
     path('dashboard/', admin_dashboard, name='admin_dashboard'),
+    path('corredor/', corredor_dashboard, name='corredor_dashboard'),
+    path('auditor/', auditor_dashboard, name='auditor_dashboard'),
+    path('calificaciones/', listaCalificaciones, name='listaCalificaciones'),
+    path('calificaciones/crear/', crearCalificacion, name='crearCalificacion'),
+    path('calificaciones/modificar/<int:id>/', modCalificacion, name='modCalificacion'),
+    path('calificaciones/eliminar/<int:id>/', eliminarCalificacion, name='eliminarCalificacion'),
+    path("roles/", listarRoles, name="listarRoles"),
+    path("roles/crear/", crearRol, name="crearRol"),
+    path("roles/editar/<int:id>/", editarRol, name="editarRol"),
+    path("roles/eliminar/<int:id>/", eliminarRol, name="eliminarRol"),
 ]
+
