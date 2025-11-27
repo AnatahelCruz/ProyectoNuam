@@ -79,11 +79,14 @@ pymysql.install_as_MySQLdb()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'entornoprueba',
-        'USER': 'root',
-        'PASS': ''
+        'NAME': 'nuamDb',
+        'USER': 'nuam',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
+
 
 
 # Password validation
