@@ -1,10 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel del Corredor Tributario - Nuam</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/corredor_dashboard.css' %}">
 </head>
@@ -15,23 +16,29 @@
                 <img src="{% static 'img/nuam_HD.png' %}" alt="Nuam Logo" class="logo me-2">
             </a>
 
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Notificaciones</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Montos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'listaCalificaciones' %}">Calificaciones</a></li>
-                </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link active" href="{% url 'corredor_dashboard' %}">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'verNotificacionesCorredor' %}">Notificaciones</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'listaCalificaciones' %}">Calificaciones</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'factores' %}">Factores</a></li>
+            </ul>
 
-                <div class="d-flex align-items-center">
-                    <button class="btn btn-light me-2"><i class="bi bi-gear"></i></button>
-                    <div class="input-group me-3" style="width:200px;">
-                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control border-start-0" placeholder="Buscar">
-                    </div>
-                    <div class="profile-placeholder bg-nuam text-white rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="bi bi-person"></i>
-                    </div>
+            <div class="d-flex align-items-center">
+                <button class="btn btn-light me-2" id="theme-toggle"><i class="bi bi-toggles"></i></button>
+                
+                <div class="input-group me-3" style="width:200px;">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="text" name="q" class="form-control border-start-0" placeholder="Buscar" value="{{ request.GET.q|default:'' }}">
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-nuam rounded-circle p-2 d-flex align-items-center justify-content-center"
+                            type="button" id="dropdownUser" data-bs-toggle="dropdown">
+                        <i class="bi bi-person fs-5 text-white"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -39,75 +46,67 @@
 
     <main class="container my-5">
         <div class="row g-4">
+
             <div class="col-md-6">
                 <div class="box border-nuam shadow-sm p-4">
-                    <h5 class="fw-bold mb-3 text-center">Crear nueva calificación</h5>
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Nueva calificación</label>
-                            <input type="text" class="form-control" placeholder="Escribe la calificación">
-                        </div>
-                        <div class="text-center">
-                            <button class="btn btn-nuam me-2" type="submit">OK</button>
-                            <button class="btn btn-secondary" type="button">Cancel</button>
-                        </div>
-                    </form>
+                    <h5 class="fw-bold mb-3 text-center">Últimas Calificaciones</h5>
+                    <ul class="list-group">
+                        {% for c in ultimas_calificaciones %}
+                            <li class="list-group-item">
+                                <strong>{{ c.instrumento }}</strong> — {{ c.mercado }}<br>
+                                <small class="text-muted">Fecha de pago: {{ c.fecha_pago }}</small>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item text-center text-muted">
+                                No hay calificaciones registradas.
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'listaCalificaciones' %}" class="btn btn-nuam">Ver todas las calificaciones</a>
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="box border-nuam shadow-sm p-4">
-                    <h5 class="fw-bold mb-3 text-center">Ingreso de montos</h5>
-                    <form>
-                        <div class="input-group mb-3">
-                            <input type="number" class="form-control" placeholder="Ingresar monto">
-                            <button class="btn btn-nuam" type="button"><i class="bi bi-plus-lg"></i></button>
-                        </div>
-                        <div class="text-center">
-                            <button class="btn btn-nuam me-2" type="submit">Guardar cambios</button>
-                            <button class="btn btn-secondary" type="button">Cancelar</button>
-                        </div>
-                    </form>
+                    <h5 class="fw-bold mb-3 text-center">Centro de Notificaciones</h5>
+                    <ul class="list-group mb-3">
+                        {% for n in ultimas_notificaciones %}
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="d-flex align-items-center gap-3">
+                                    {% if n.tipo_cambio == 'CREACION' %}
+                                        <i class="bi bi-check-circle-fill text-success fs-5" title="Creación"></i>
+                                    {% elif n.tipo_cambio == 'MODIFICACION' %}
+                                        <i class="bi bi-pencil-fill text-warning fs-5" title="Modificación"></i>
+                                    {% elif n.tipo_cambio == 'ELIMINACION' %}
+                                        <i class="bi bi-x-circle-fill text-danger fs-5" title="Eliminación"></i>
+                                    {% else %}
+                                        <i class="bi bi-info-circle-fill text-secondary fs-5" title="Información"></i>
+                                    {% endif %}
+                                    <div>
+                                        {{ n.detalle_registro }}
+                                    </div>
+                                </div>
+                                <small class="text-muted">{{ n.fecha_cambio|timesince }} atrás</small>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item text-center text-muted">
+                                No hay notificaciones recientes.
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="text-center">
+                        <a href="{% url 'verNotificacionesCorredor' %}" class="btn btn-nuam">Ver todas las notificaciones</a>
+                    </div>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="box border-nuam shadow-sm p-4">
-                    <h5 class="fw-bold mb-3 text-center">Ingresar datos</h5>
-                    <form>
-                        <div class="mb-3">
-                            <input type="text" class="form-control mb-2" placeholder="Ingresar datos...">
-                            <input type="text" class="form-control mb-2" placeholder="Ingresar tipo de calificación...">
-                        </div>
-                        <div class="text-center">
-                            <button class="btn btn-nuam" type="submit">Ingresar aquí</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="box border-nuam shadow-sm p-4">
-                    <h5 class="fw-bold mb-3 text-center">Filtrar calificaciones</h5>
-                    <select class="form-select mb-3">
-                        <option>Buscar aquí...</option>
-                        <option>Calificación 1</option>
-                        <option>Calificación 2</option>
-                        <option>Calificación 3</option>
-                        <option>Calificación 4</option>
-                        <option>Calificación 5</option>
-                        <option>Calificación 6</option>
-                        <option>Calificación 7</option>
-                        <option>Calificación 8</option>
-                        <option>Calificación 9</option>
-                        <option>Calificación 10</option>
-                    </select>
-                </div>
-            </div>
         </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/darkMode.js' %}"></script>
 </body>
 </html>
+

@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factores Tributarios - Nuam</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/corredor_dashboard.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="{% static 'img/nuam_HD.png' %}" alt="Nuam Logo" class="logo me-2">
+            </a>
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="{% url 'corredor_dashboard' %}">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'verNotificacionesCorredor' %}">Notificaciones</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'listaCalificaciones' %}">Calificaciones</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{% url 'factores' %}">Factores</a></li>
+            </ul>
+
+            <div class="d-flex align-items-center">
+                <button class="btn btn-light me-2" id="theme-toggle"><i class="bi bi-toggles"></i></button>
+
+                <div class="input-group me-3" style="width:200px;">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="text" name="q" class="form-control border-start-0" placeholder="Buscar" value="{{ request.GET.q|default:'' }}">
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-nuam rounded-circle p-2 d-flex align-items-center justify-content-center"
+                            type="button" id="dropdownUser" data-bs-toggle="dropdown">
+                        <i class="bi bi-person fs-5 text-white"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 border-nuam">
+                    <h5 class="fw-bold text-center mb-3">Seleccionar Calificación</h5>
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="GET" action="">
+                        <div class="mb-3">
+                            <select name="calificacion_id" class="form-select border-nuam" onchange="this.form.submit()">
+                                <option value="">-- Seleccione una Calificación --</option>
+                                {% for c in calificaciones %}
+                                    <option value="{{ c.id }}" {% if calificacion_seleccionada and calificacion_seleccionada.id == c.id %}selected{% endif %}>
+                                        {{ c.id }} - {{ c.instrumento.nombre }} - {{ c.fecha_pago }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card shadow-sm p-3 border-nuam">
+                    <h5 class="fw-bold text-center mb-3">Factores Tributarios</h5>
+
+                    {% if calificacion_seleccionada %}
+                        {% if factores_existentes.exists %}
+                            <form method="POST" action="{% url 'guardarFactores' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="calificacion_id" value="{{ calificacion_seleccionada.id }}">
+
+                                <table class="table table-bordered text-center border-nuam">
+                                    <thead class="table-light border-nuam">
+                                        <tr>
+                                            <th class="border-nuam">Factor</th>
+                                            <th class="border-nuam">Valor</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for f in factores_existentes %}
+                                        <tr>
+                                            <td class="border-nuam">{{ f.numero }}</td>
+                                            <td class="border-nuam">
+                                                <input type="number" step="0.000001" name="factor_{{ f.numero }}" value="{{ f.valor }}" class="form-control border-nuam">
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="isfut" id="isfut" {% if calificacion_seleccionada.isfut %}checked{% endif %}>
+                                    <label class="form-check-label fw-bold" for="isfut">Ingreso por montos (ISFUT)</label>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <button type="submit" class="btn btn-nuam">Modificar Factores</button>
+                                    <a href="{% url 'factores' %}" class="btn btn-secondary">Cancelar</a>
+                                </div>
+                            </form>
+                        {% else %}
+                            <p class="text-danger fw-bold">⚠ Esta calificación no tiene factores registrados.</p>
+                            <form method="POST" action="{% url 'guardarFactores' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="calificacion_id" value="{{ calificacion_seleccionada.id }}">
+
+                                <div class="row g-2">
+                                    {% for clave, nombre in nombres_factores.items %}
+                                    <div class="col-6 mb-2">
+                                        <label class="form-label">{{ clave }} - {{ nombre }}</label>
+                                        <input type="number" step="0.000001" name="{{ clave }}" value="0" class="form-control border-nuam">
+                                    </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="form-check mb-3 mt-2">
+                                    <input class="form-check-input" type="checkbox" name="isfut" id="isfutNueva">
+                                    <label class="form-check-label fw-bold" for="isfutNueva">Ingreso por montos (ISFUT)</label>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <button type="submit" class="btn btn-nuam">Agregar Factores</button>
+                                    <a href="{% url 'factores' %}" class="btn btn-secondary">Cancelar</a>
+                                </div>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted">Seleccione una calificación para ver y modificar sus factores.</p>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/darkmode.js' %}"></script>
+</body>
+</html>
+

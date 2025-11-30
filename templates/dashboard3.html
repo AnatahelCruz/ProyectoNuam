@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,23 +15,31 @@
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <img src="{% static 'img/nuam_HD.png' %}" alt="Nuam Logo" class="logo me-2">
             </a>
-
+            
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Acceder registros</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Consultas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Notificaciones</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'auditor_dashboard' %}">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'registros' %}">Acceder registros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'consultas' %}">Consultas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'notificaciones' %}">Notificaciones</a></li>
                 </ul>
-
+                
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-light me-2"><i class="bi bi-gear"></i></button>
+                    <button class="btn btn-light me-2" id="theme-toggle"><i class="bi bi-toggles"></i></button>
+                    
                     <div class="input-group me-3" style="width:200px;">
                         <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
                         <input type="text" class="form-control border-start-0" placeholder="Buscar">
                     </div>
-                    <div class="profile-placeholder rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="bi bi-person"></i>
+
+                    <div class="dropdown">
+                        <button class="btn btn-nuam rounded-circle p-2 d-flex align-items-center justify-content-center"
+                                type="button" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person text-white fs-5"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -40,129 +48,104 @@
 
     <main class="container my-5">
         <div class="row g-4">
-            
-            <div class="col-md-6 order-md-1"> 
+
+            <div class="col-md-6">
                 <div class="card border-nuam shadow-sm">
-                    <div class="card-header fw-bold">Notificaciones</div>
+                    <div class="card-header fw-bold">Notificaciones recientes</div>
                     <div class="card-body">
-                        
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"></i>
-                                <div>
-                                    <span class="fw-bold">Warning!</span> Ocurrieron cambios no autorizados.
+                        {% if notificaciones %}
+                            {% for n in notificaciones %}
+                                <div class="alert alert-{{ n.tipo }} alert-dismissible fade show mb-3" role="alert">
+                                    <div class="d-flex align-items-start">
+                                        {% if n.tipo == 'warning' %}
+                                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                        {% elif n.tipo == 'danger' %}
+                                            <i class="bi bi-x-octagon-fill me-2"></i>
+                                        {% elif n.tipo == 'success' %}
+                                            <i class="bi bi-check-circle-fill me-2"></i>
+                                        {% else %}
+                                            <i class="bi bi-info-circle-fill me-2"></i>
+                                        {% endif %}
+                                        <div>
+                                            <strong>{{ n.mensaje }}</strong><br>
+                                            <small class="text-muted">{{ n.fecha|date:"d/m/Y H:i" }}</small>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
-                            </div>
-                            <button type="button" class="btn-close alert-close-btn" data-bs-dismiss="alert" aria-label="Close">x</button>
-                        </div>
-                        
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <div class="d-flex flex-column">
-                                <div class="mb-1">
-                                    <i class="bi bi-x-octagon-fill flex-shrink-0 me-2"></i>
-                                    <span class="fw-bold">Error.</span> Se accedió a la base de datos.
-                                </div>
-                                <p class="mt-1 mb-0 ms-4">Alguien accedió al sistema ¿eras tú? de no ser así verifique la seguridad...</p>
-                            </div>
-                            <button type="button" class="btn-close alert-close-btn" data-bs-dismiss="alert" aria-label="Close">x</button>
-                        </div>
-                        
-                        <button class="btn btn-nuam mt-2">Click aqui para más</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-6 order-md-2">
-                <div class="card border-nuam shadow-sm">
-                    <div class="card-header fw-bold">Registros de cambio</div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-start mb-3">
-                            <span class="log-status-badge log-status-all me-2">All</span>
-                            <span class="log-status-badge log-status-unread">Unread</span>
-                        </div>
-                        
-                        <div class="log-item">
-                            <div class="log-item-avatar bg-success"></div>
-                            <div class="log-item-info">
-                                <strong>David Doe.</strong> 
-                                <small>hace 3h - agregó una calificación</small>
-                            </div>
-                        </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No hay notificaciones registradas.</p>
+                        {% endif %}
 
-                        <div class="log-item">
-                            <div class="log-item-avatar bg-success"></div>
-                            <div class="log-item-info">
-                                <strong>Hanna Blue.</strong> 
-                                <small>04/10/25 - modificó una calificación</small>
-                            </div>
-                        </div>
-
-                        <div class="log-item">
-                            <div class="log-item-avatar bg-secondary"></div>
-                            <div class="log-item-info">
-                                <strong>Sam Cloe.</strong> 
-                                <small>hace 20m - se hizo una búsqueda</small>
-                            </div>
-                        </div>
-
-                        <div class="log-item log-danger d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <div class="log-item-avatar bg-danger"></div>
-                                <div class="log-item-info">
-                                    <strong>Ben Green.</strong> 
-                                    <small>hace 1s - accedió a la base de datos</small>
-                                </div>
-                            </div>
-                            <button class="btn-delete-log">Delete</button>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'notificaciones' %}" class="btn btn-nuam">Ver más</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6 order-md-3">
+            <div class="col-md-6">
                 <div class="card border-nuam shadow-sm">
-                    <div class="card-header fw-bold">Registros de acceso de usuario</div>
+                    <div class="card-header fw-bold">Registros de consultas</div>
+                    <div class="card-body">
+                        {% if cambios %}
+                            {% for c in cambios %}
+                                <div class="log-item d-flex justify-content-between align-items-center mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="log-item-avatar bg-secondary"></div>
+                                        <div class="log-item-info ms-2">
+                                            <strong>{{ c.usuario.username }}</strong>
+                                            <small class="d-block text-muted">
+                                                {{ c.fecha_cambio|date:"d/m/Y H:i" }} — {{ c.detalle_registro }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No hay registros de cambio.</p>
+                        {% endif %}
+                        <div class="text-center">
+                            <a href="{% url 'consultas' %}" class="btn btn-nuam">Ver más</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-nuam shadow-sm">
+                    <div class="card-header fw-bold">Registros de acceso</div>
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <div class="d-flex align-items-center">
-                                    <div class="log-item-avatar bg-primary"></div>
-                                    <div class="ms-3">
-                                        <span class="access-user-name">David Doe</span>
-                                        <span class="access-time d-block">Accedió a las 21:09 pm - 04/10/25</span>
-                                    </div>
-                                </div>
-                                <i class="bi bi-star-fill text-nuam"></i>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="d-flex align-items-center">
-                                    <div class="log-item-avatar bg-info"></div>
-                                    <div class="ms-3">
-                                        <span class="access-user-name">Marie Carter</span>
-                                        <span class="access-time d-block">Accedió a las 08:00 am - 01/11/25</span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="d-flex align-items-center">
-                                    <div class="log-item-avatar bg-warning"></div>
-                                    <div class="ms-3">
-                                        <span class="access-user-name">Donald Tom</span>
-                                        <span class="access-time d-block">Accedió a las 16:44 pm - 02/12/25</span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                Ver más
-                            </li>
+                            {% if accesos %}
+                                {% for a in accesos %}
+                                    <li class="list-group-item">
+                                        <div class="d-flex align-items-center">
+                                            <div class="log-item-avatar bg-primary"></div>
+                                            <div class="ms-3">
+                                                <span class="access-user-name">{{ a.usuario.username }}</span>
+                                                <span class="access-time d-block">Accedió el {{ a.fecha_acceso|date:"d/m/Y - H:i" }}</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <li class="list-group-item text-muted">No hay accesos registrados.</li>
+                            {% endif %}
                         </ul>
+                    </div>
+
+                    <div class="text-center my-2">
+                        <a href="{% url 'registros' %}" class="btn btn-nuam">Ver más</a>
                     </div>
                 </div>
             </div>
-            
-            </div>
+
+        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/darkMode.js' %}"></script>
 </body>
 </html>

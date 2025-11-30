@@ -92,3 +92,7 @@ label {
 button {
     border-radius: 6px;
 }
+
+body.dark-mode {
+    background-color: #121212; /* fondo oscuro */
+}

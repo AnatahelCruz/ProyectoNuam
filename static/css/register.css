@@ -1,0 +1,15 @@
+.btn-orange-nuam {
+    width: 100%;
+    background-color: #ff7f00; 
+    color: white;
+    border: none;
+    padding: 12px;
+    margin-top: 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-orange-nuam:hover {
+    background-color: #e66f00;
+}

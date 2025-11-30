@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calificaciones Tributarias - Nuam</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/corredor_dashboard.css' %}">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="{% static 'img/nuam_HD.png' %}" alt="Nuam Logo" class="logo me-2">
+            </a>
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="{% url 'corredor_dashboard' %}">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'verNotificacionesCorredor' %}">Notificaciones</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{% url 'listaCalificaciones' %}">Calificaciones</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'factores' %}">Factores</a></li>
+            </ul>
+
+            <div class="d-flex align-items-center">
+                <button class="btn btn-light me-2" id="theme-toggle"><i class="bi bi-toggles"></i></button>
+                
+                <div class="input-group me-3" style="width:200px;">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="text" name="q" class="form-control border-start-0" placeholder="Buscar" value="{{ request.GET.q|default:'' }}">
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-nuam rounded-circle p-2 d-flex align-items-center justify-content-center"
+                            type="button" id="dropdownUser" data-bs-toggle="dropdown">
+                        <i class="bi bi-person fs-5 text-white"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="card shadow-sm p-3 border-nuam">
+                    <h5 class="fw-bold text-center mb-3">
+                        {% if accion %}{{ accion }} Calificación{% else %}Nueva Calificación{% endif %}
+                    </h5>
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="POST" autocomplete="off"
+                        action="{% if accion == 'Modificar' %}{% url 'modCalificacion' form.instance.id %}{% else %}{% url 'crearCalificacion' %}{% endif %}">
+                        {% csrf_token %}
+
+                        <div class="mb-2">
+                            <label class="form-label fw-bold">Instrumento</label>
+                            {{ form.nuevo_instrumento }}
+                        </div>
+
+                        <div class="mb-2">{{ form.mercado.label_tag }} {{ form.mercado }}</div>
+                        <div class="mb-2">{{ form.descripcion.label_tag }} {{ form.descripcion }}</div>
+                        <div class="mb-2">{{ form.anio.label_tag }} {{ form.anio }}</div>
+
+                        <h6 class="fw-semibold mt-3 text-nuam border-bottom pb-1">Información Tributaria</h6>
+
+                        <div class="mb-2">{{ form.secuencia_evento.label_tag }} {{ form.secuencia_evento }}</div>
+                        <div class="mb-2">{{ form.dividendo.label_tag }} {{ form.dividendo }}</div>
+                        <div class="mb-2">{{ form.valor_historico.label_tag }} {{ form.valor_historico }}</div>
+                        <div class="mb-2">{{ form.factor_actualizacion.label_tag }} {{ form.factor_actualizacion }}</div>
+                        <div class="mb-2">{{ form.isfut.label_tag }} {{ form.isfut }}</div>
+                        <div class="mb-3">{{ form.fecha_pago.label_tag }} {{ form.fecha_pago }}</div>
+
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-nuam me-2">Guardar</button>
+                            <a href="{% url 'listaCalificaciones' %}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card shadow-sm p-3 border-nuam">
+                    <h5 class="fw-bold text-center mb-3">Listado de Calificaciones</h5>
+                    <input type="text" id="filtro" class="form-control mb-3" placeholder="Buscar...">
+
+                    <table class="table table-hover align-middle text-center">
+                        <thead class="bg-nuam text-white">
+                            <tr>
+                                <th>ID</th>
+                                <th>Instrumento</th>
+                                <th>Fecha Pago</th>
+                                <th>Descripción</th>
+                                <th>Secuencia Evento</th>
+                                <th>Factores</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-calificaciones">
+                            {% for c in calificaciones %}
+                            <tr>
+                                <td>{{ c.id }}</td>
+                                <td>{{ c.instrumento.nombre }}</td>
+                                <td>{{ c.fecha_pago|date:"d-m-Y" }}</td>
+                                <td>{{ c.descripcion }}</td>
+                                <td>{{ c.secuencia_evento }}</td>
+                                <td>
+                                    <a href="{% url 'factores' %}?calificacion_id={{ c.id }}" class="btn btn-sm btn-nuam text-white">
+                                        Ver
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'modCalificacion' c.id %}" class="btn btn-sm btn-warning">Editar</a>
+                                    <a href="{% url 'eliminarCalificacion' c.id %}" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('¿Eliminar calificación?')">Eliminar</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="{% static 'js/calificaciones.js' %}"></script>
+    <script src="{% static 'js/darkmode.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

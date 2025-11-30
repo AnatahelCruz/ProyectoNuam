@@ -1,14 +1,16 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración - Nuam</title>
+    <title>Dashboard Administrador - Nuam</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
 </head>
 <body>
+
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center" href="#">
@@ -17,72 +19,118 @@
 
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'listarRoles' %}">Roles</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Cargar Archivo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Notificaciones</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'admin_dashboard' %}">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'usuarios' %}">Roles</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'cargarArchivo' %}">Cargar Archivo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'notificacionesAdmin' %}">Notificaciones</a></li>
                 </ul>
 
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-light me-2"><i class="bi bi-gear"></i></button>
-                    <div class="input-group me-3" style="width:200px;">
-                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                    <button class="btn btn-light me-2" id="theme-toggle"><i class="bi bi-toggles"></i></button>
+
+                    <div class="input-group me-3" style="width: 200px;">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search"></i>
+                        </span>
                         <input type="text" class="form-control border-start-0" placeholder="Buscar">
                     </div>
-                    <div class="profile-placeholder bg-nuam text-white rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="bi bi-person"></i>
+
+                    <div class="dropdown">
+                        <button class="btn btn-nuam rounded-circle p-2 d-flex align-items-center justify-content-center"
+                                type="button" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person text-white fs-5"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
+                            <li><a class="dropdown-item" href="{% url 'corredor_dashboard' %}">Vista Corredor Tributario</a></li>
+                            <li><a class="dropdown-item" href="{% url 'auditor_dashboard' %}">Vista Auditor</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="container my-5">
+    <div class="container mt-5">
+        <h2 class="mb-4 text-dark">Panel de Administración</h2>
         <div class="row g-4">
 
-            <div class="col-md-6">
-                <div class="card border-nuam shadow-sm">
-                    <div class="card-header fw-bold">Notificaciones</div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-nuam">
+                    <div class="card-header bg-nuam text-white fw-bold">Últimas Notificaciones</div>
                     <div class="card-body">
-                        <div class="alert alert-primary py-2 mb-2">Calificaciones_1 — El archivo se subió correctamente.</div>
-                        <div class="alert alert-danger py-2 mb-2">Calificaciones_2 — No se pudo subir este archivo.</div>
-                        <button class="btn btn-nuam mt-2">Ver Notificaciones</button>
+                        {% if ultimas_notificaciones %}
+                            <ul class="list-group list-group-flush">
+                            {% for noti in ultimas_notificaciones %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center text-dark">
+                                    {{ noti.mensaje }}
+                                    {% if noti.tipo == 'success' %}
+                                        <span class="badge bg-success">Éxito</span>
+                                    {% elif noti.tipo == 'danger' %}
+                                        <span class="badge bg-danger">Error</span>
+                                    {% elif noti.tipo == 'warning' %}
+                                        <span class="badge bg-warning text-dark">Advertencia</span>
+                                    {% elif noti.tipo == 'info' %}
+                                        <span class="badge bg-info text-dark">Información</span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted">No hay notificaciones recientes.</p>
+                        {% endif %}
+                        <a href="{% url 'notificacionesAdmin' %}" class="btn btn-nuam mt-2 w-100">Ver todas</a>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="card border-nuam shadow-sm">
-                    <div class="card-header fw-bold">Carga de Archivos</div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-nuam">
+                    <div class="card-header bg-nuam text-white fw-bold">Últimos Archivos Subidos</div>
                     <div class="card-body">
-                        <div class="alert alert-success py-2 mb-2">Calificaciones_3 — Se está procesando la subida.</div>
-                        <div class="alert alert-success py-2 mb-2">Calificaciones_4 — Se está procesando la subida.</div>
-                        <button class="btn btn-nuam mt-2">Cargar Archivos</button>
+                        {% if ultimos_archivos %}
+                            <ul class="list-group list-group-flush">
+                            {% for archivo in ultimos_archivos %}
+                                <li class="list-group-item text-dark">
+                                    {{ archivo.nombre_archivo }} <br>
+                                    <small class="text-muted">{{ archivo.fecha_carga|date:"d/m/Y H:i" }}</small>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted">No hay archivos recientes.</p>
+                        {% endif %}
+                        <a href="{% url 'cargarArchivo' %}" class="btn btn-nuam mt-2 w-100">Revisar carga de archivos</a>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="card border-nuam shadow-sm">
-                    <div class="card-header fw-bold">Roles del Sistema</div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-nuam">
+                    <div class="card-header bg-nuam text-white fw-bold">Últimos Usuarios</div>
                     <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Corredor Tributario <i class="bi bi-pencil"></i>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Auditor <i class="bi bi-lock"></i>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Administrador <i class="bi bi-person-badge"></i>
-                            </li>
-                        </ul>
+                        {% if ultimos_usuarios %}
+                            <ul class="list-group list-group-flush">
+                            {% for usuario in ultimos_usuarios %}
+                                <li class="list-group-item text-dark">
+                                    {{ usuario.nombre }} {{ usuario.apellido }} <br>
+                                    <small class="text-muted">{{ usuario.correo }} - {{ usuario.rol }}</small>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted">No hay usuarios recientes.</p>
+                        {% endif %}
+                        <a href="{% url 'usuarios' %}" class="btn btn-nuam mt-2 w-100">Gestionar roles</a>
                     </div>
                 </div>
             </div>
+
         </div>
-    </main>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/darkMode.js' %}"></script>
 </body>
 </html>

@@ -1,25 +1,41 @@
 from django import forms
-from .models import CalificacionTributaria
+from .models import CalificacionTributaria, Instrumento
 
 class CalificacionForm(forms.ModelForm):
+    nuevo_instrumento = forms.CharField(
+        required=True,
+        label="Instrumento",
+        widget=forms.TextInput(attrs={'placeholder': 'Ingresar instrumento'})
+    )
+
     class Meta:
         model = CalificacionTributaria
         fields = [
-            'codigo_emisor', 'nombre_emisor', 'tipo_instrumento',
-            'monto_bruto', 'monto_neto', 'retencion_impuesto',
-            'fecha_emision', 'año_tributario', 'estado_calificacion',
-            'observaciones'
+            'mercado',
+            'nuevo_instrumento',
+            'descripcion',
+            'fecha_pago',
+            'secuencia_evento',
+            'dividendo',
+            'valor_historico',
+            'factor_actualizacion',
+            'anio',
+            'isfut'
         ]
         widgets = {
-            'codigo_emisor': forms.TextInput(attrs={'class': 'form-control'}),
-            'nombre_emisor': forms.TextInput(attrs={'class': 'form-control'}),
-            'tipo_instrumento': forms.TextInput(attrs={'class': 'form-control'}),
-            'monto_bruto': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'monto_neto': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'retencion_impuesto': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'fecha_emision': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'año_tributario': forms.NumberInput(attrs={'class': 'form-control'}),
-            'estado_calificacion': forms.Select(attrs={'class': 'form-select'}),
-            'observaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'fecha_pago': forms.DateInput(attrs={'type': 'date'}),
+            'descripcion': forms.Textarea(attrs={'rows': 2}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.instrumento:
+            self.fields["nuevo_instrumento"].initial = self.instance.instrumento.nombre
+
+    def save(self, commit=True):
+        instrumento_nombre = self.cleaned_data.get("nuevo_instrumento").strip()
+
+        instrumento, _ = Instrumento.objects.get_or_create(nombre=instrumento_nombre)
+        self.instance.instrumento = instrumento
+
+        return super().save(commit)
