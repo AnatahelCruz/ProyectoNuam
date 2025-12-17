@@ -1,0 +1,49 @@
+
+.bg-nuam {
+    background-color: #f57c00 !important;
+}
+
+.btn-primary-nuam {
+    background-color: #f57c00 !important;
+    border-color: #f57c00 !important;
+    color: white;
+}
+
+.btn-primary-nuam:hover {
+    background-color: #d96800 !important;
+    border-color: #d96800 !important;
+}
+
+.profile-placeholder {
+    width: 40px;
+    height: 40px;
+    background-color: #f57c00;
+}
+
+
+.input-file {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+.modal-header.bg-nuam {
+    background-color: #f57c00 !important;
+    color: white;
+}
+
+.table-sm th, .table-sm td {
+    padding: 6px 8px;
+}
+
+.table-bordered td, 
+.table-bordered th {
+    border: 1px solid #ddd !important;
+}
+.btn-nuam.rounded-circle {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+}
