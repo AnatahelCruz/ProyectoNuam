@@ -1,10 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-<<<<<<< HEAD
 from django.utils import timezone
 from datetime import timedelta
-=======
->>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
+
 
 class Mercado(models.TextChoices):
     ACCIONES = "Acciones", "Acciones"
@@ -54,11 +52,10 @@ class FactorTributario(models.Model):
         on_delete=models.CASCADE,
         related_name="factores"
     )
-<<<<<<< HEAD
+
     numero = models.PositiveIntegerField() 
-=======
     numero = models.PositiveIntegerField()  # Ejemplo: 8...37
->>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
+
     valor = models.DecimalField(max_digits=10, decimal_places=6, null=True, blank=True)
 
     class Meta:
@@ -179,7 +176,6 @@ class UserRole(models.Model):
 
     def __str__(self):
         return f"{self.user.username} → {self.role.nombre}"
-<<<<<<< HEAD
 
 class LoginAttempt(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -202,5 +198,3 @@ class LoginAttempt(models.Model):
     def __str__(self):
         estado = "Bloqueado" if self.is_blocked() else "Activo"
         return f"{self.user.username} - {estado} ({self.attempts} intentos)"
-=======
->>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
