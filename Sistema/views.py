@@ -9,7 +9,10 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
+<<<<<<< HEAD
 from datetime import timedelta
+=======
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
 
 from .models import (
     CalificacionTributaria,
@@ -22,8 +25,12 @@ from .models import (
     ArchivoDetalle,
     UserRole,
     Instrumento,
+<<<<<<< HEAD
     FactorTributario,
     LoginAttempt
+=======
+    FactorTributario
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
 )
 
 from .forms import CalificacionForm
@@ -33,12 +40,17 @@ from .forms import CalificacionForm
 # LOGIN / LOGOUT
 # ==========================================================
 
+<<<<<<< HEAD
 def login_view(request): 
 
+=======
+def login_view(request):
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
     if request.method == "POST":
         correo = request.POST.get("correo")
         password = request.POST.get("password")
 
+<<<<<<< HEAD
 
         try:
             user = User.objects.get(username=correo)
@@ -93,6 +105,40 @@ def login_view(request):
         else:
             messages.error(request, "Tu rol no tiene un panel asignado.")
             logout(request)
+=======
+        user = authenticate(request, username=correo, password=password)
+
+        if user is None:
+            messages.error(request, "Correo o contraseña incorrectos.")
+            return redirect("login")
+
+        user_role = UserRole.objects.filter(user=user).first()
+        if not user_role and not user.is_superuser:
+            messages.error(request, "Tu cuenta no tiene permisos asignados para acceder.")
+            return redirect("login")
+
+        login(request, user)
+
+        ip = request.META.get('REMOTE_ADDR')
+        logAcceso.objects.create(
+            usuario=user,
+            tipo_accion="LOGIN",
+            direccion_ip=ip
+        )
+
+        if user.is_superuser:
+            return redirect("admin_dashboard")
+
+        rol = user_role.role.nombre
+        if rol == "Administrador":
+            return redirect("admin_dashboard")
+        elif rol == "Corredor":
+            return redirect("corredor_dashboard")
+        elif rol == "Auditor":
+            return redirect("auditor_dashboard")
+        else:
+            messages.error(request, "Tu rol no tiene un panel asignado.")
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
             return redirect("login")
 
     return render(request, "login.html")

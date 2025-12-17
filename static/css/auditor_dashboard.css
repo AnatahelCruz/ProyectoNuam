@@ -53,6 +53,7 @@ body.dark-mode{
     width: 40px;
     height: 40px;
     background-color: #ff5722;
+<<<<<<< HEAD
 }
 
 /* ===========================
@@ -134,3 +135,6 @@ body.dark-mode .dropdown-item {
 body.dark-mode .dropdown-item:hover {
     background-color: #333;
 }
+=======
+}
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e

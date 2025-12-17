@@ -1,12 +1,19 @@
 body {
     background-color: #f8f9fa;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+<<<<<<< HEAD
     color: #212529;
+=======
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
 }
 
 .logo {
     width: 110px;
+<<<<<<< HEAD
     height: auto;
+=======
+    height: auto;   
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
 }
 
 .text-nuam {
@@ -41,7 +48,11 @@ body {
     transition: 0.3s;
 }
 
+<<<<<<< HEAD
 .nav-link.active,
+=======
+.nav-link.active, 
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
 .nav-link:hover {
     background-color: #ff5722;
     color: #fff !important;
@@ -49,6 +60,19 @@ body {
     padding: 6px 12px;
 }
 
+<<<<<<< HEAD
+=======
+.profile-placeholder {
+    width: 40px;
+    height: 40px;
+    background-color: #ff5722;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
 .box {
     background-color: #fff;
     border-radius: 10px;
@@ -60,19 +84,30 @@ body {
     box-shadow: 0 4px 12px rgba(255, 87, 34, 0.15);
 }
 
+<<<<<<< HEAD
 input[type="text"],
 input[type="number"],
 select,
 textarea,
+=======
+
+input[type="text"],
+input[type="number"],
+select,
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
 .form-control {
     border: 1.5px solid #ddd;
     border-radius: 6px;
     transition: 0.3s;
 }
 
+<<<<<<< HEAD
 input:focus,
 select:focus,
 textarea:focus {
+=======
+input:focus, select:focus {
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
     border-color: #ff5722;
     box-shadow: 0 0 6px rgba(255, 87, 34, 0.3);
 }
@@ -82,6 +117,7 @@ label {
     color: #444;
 }
 
+<<<<<<< HEAD
 
 body.dark-mode {
     background-color: #121212;
@@ -149,3 +185,12 @@ body.dark-mode .input-group-text {
     color: #fff;
     border-color: #555;
 }
+=======
+button {
+    border-radius: 6px;
+}
+
+body.dark-mode {
+    background-color: #121212; /* fondo oscuro */
+}
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e

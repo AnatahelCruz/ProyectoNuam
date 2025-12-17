@@ -1,7 +1,10 @@
 body {
     background-color: #f8f9fa;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+<<<<<<< HEAD
     color: #212529;
+=======
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
 }
 
 .logo {
@@ -29,7 +32,10 @@ body {
 
 .btn-nuam:hover {
     background-color: #ff784e;
+<<<<<<< HEAD
     color: #fff;
+=======
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
 }
 
 .nav-link {
@@ -38,14 +44,19 @@ body {
     margin-right: 10px;
 }
 
+<<<<<<< HEAD
 .nav-link.active,
 .nav-link:hover {
+=======
+.nav-link.active, .nav-link:hover {
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
     background-color: #ff5722;
     color: #fff !important;
     border-radius: 6px;
     padding: 6px 12px;
 }
 
+<<<<<<< HEAD
 body.dark-mode {
     background-color: #1b1b1b;
     color: #eaeaea;
@@ -103,4 +114,10 @@ body.dark-mode .dropdown-item {
 
 body.dark-mode .dropdown-item:hover {
     background-color: #333;
+=======
+.profile-placeholder {
+    width: 40px;
+    height: 40px;
+    background-color: #ff5722;
+>>>>>>> 0af4e759cbf19d5c92264c5f6c8098c44ad2f74e
 }
